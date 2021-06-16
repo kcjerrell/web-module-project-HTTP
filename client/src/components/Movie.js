@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
 
-// import axios from 'axios';
 import { MoviesContext } from '../api/moviesApi';
 
 const Movie = (props) => {
@@ -23,7 +22,6 @@ const Movie = (props) => {
             .catch(err => {
                 console.log(err.response);
             })
-
     }, [id]);
 
     const delete_onClick = e => {

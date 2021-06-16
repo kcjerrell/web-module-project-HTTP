@@ -1,43 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import MovieList from './components/MovieList';
-import Movie from './components/Movie';
 
 import MovieHeader from './components/MovieHeader';
-
-import EditMovieForm from './components/EditMovieForm';
+import Movie from './components/Movie';
+import MovieList from './components/MovieList';
 import FavoriteMovieList from './components/FavoriteMovieList';
 
-import axios from 'axios';
+import EditMovieForm from './components/EditMovieForm';
+import AddMovieForm from "./components/AddMovieForm";
+
 import { MoviesContext, useApi } from "./api/moviesApi";
 
 
 const App = (props) => {
   const [movies, setMovies] = useState([]);
   const moviesApi = useApi(movies, setMovies);
-  //const { movies, addMovie, editMovie, deleteMovie } = moviesApi;
 
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
-
-  // useEffect(() => {
-  //   axios.get('http://localhost:5000/api/movies')
-  //     .then(res => {
-  //       setMovies(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }, []);
-
-  // const deleteMovie = (id) => {
-
-  // }
-
-  const addToFavorites = (movie) => {
-
-  }
+  const addToFavorites = (movie) => { };
 
   return (
     <div>
@@ -48,13 +29,19 @@ const App = (props) => {
       <MoviesContext.Provider value={moviesApi}>
 
         <div className="container">
+
           <MovieHeader />
+
           <div className="row ">
             <FavoriteMovieList favoriteMovies={favoriteMovies} />
 
             <Switch>
               <Route path="/movies/edit/:id">
                 <EditMovieForm />
+              </Route>
+
+              <Route path="/movies/add">
+                <AddMovieForm />
               </Route>
 
               <Route path="/movies/:id">
@@ -69,6 +56,7 @@ const App = (props) => {
                 <Redirect to="/movies" />
               </Route>
             </Switch>
+
           </div>
         </div>
       </MoviesContext.Provider>
