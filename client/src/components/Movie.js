@@ -1,30 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
 
-import axios from 'axios';
+// import axios from 'axios';
+import { MoviesContext } from '../api/moviesApi';
 
 const Movie = (props) => {
     const { addToFavorites } = props;
 
     const [movie, setMovie] = useState('');
 
-    const { id } = useParams();
-    const { push } = useHistory();
+    const { getMovie, deleteMovie } = useContext(MoviesContext);
 
-    useEffect(()=>{
-        axios.get(`http://localhost:5000/api/movies/${id}`)
-            .then(res=>{
-                setMovie(res.data);
+    const { id } = useParams();
+    const history = useHistory();
+
+    useEffect(() => {
+        // axios.get(`http://localhost:5000/api/movies/${id}`)
+        getMovie(id)
+            .then(res => {
+                setMovie(res);
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err.response);
             })
+
     }, [id]);
 
-    return(<div className="modal-page col">
+    const delete_onClick = e => {
+        e.preventDefault();
+
+        deleteMovie(id)
+            .then(() => history.push("/movies"))
+            .catch(error => console.log(error));
+    };
+
+    return (<div className="modal-page col">
         <div className="modal-dialog">
             <div className="modal-content">
-                <div className="modal-header">						
+                <div className="modal-header">
                     <h4 className="modal-title">{movie.title} Details</h4>
                 </div>
                 <div className="modal-body">
@@ -48,11 +61,11 @@ const Movie = (props) => {
                                 <p><strong>{movie.description}</strong></p>
                             </div>
                         </section>
-                        
+
                         <section>
                             <span className="m-2 btn btn-dark">Favorite</span>
                             <Link to={`/movies/edit/${movie.id}`} className="m-2 btn btn-success">Edit</Link>
-                            <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete"/></span>
+                            <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete" onClick={delete_onClick} /></span>
                         </section>
                     </div>
                 </div>
